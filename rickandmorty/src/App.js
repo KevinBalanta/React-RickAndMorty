@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 import { getAllCharacters } from './lib/Api';
+import CharacterCard from './characters/CharacterCard';
+import CharacterModal from './characters/CharacterModal';
 
 class App extends React.Component {
   constructor(props) {
@@ -37,68 +39,48 @@ class App extends React.Component {
     });
   }
 
-  renderCards(character) {
-    return (
-      <div
-        key={character.id}
-        className="Card"
-        onClick={() => this.modalActivate(character)}
-      >
-        <div className="Card-image">
-          <figure>
-            <img src={character.image} alt={character.name} />
-          </figure>
-        </div>
-        <div className="Card-description">
-          <div className="Card-name">
-            <h3>{character.name}</h3>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // renderCards(character) {
+  //   return (
+  //     <div
+  //       key={character.id}
+  //       className="Card"
+  //       onClick={() => this.modalActivate(character)}
+  //     >
+  //       <div className="Card-image">
+  //         <figure>
+  //           <img src={character.image} alt={character.name} />
+  //         </figure>
+  //       </div>
+  //       <div className="Card-description">
+  //         <div className="Card-name">
+  //           <h3>{character.name}</h3>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   render() {
     const { showModal, characters, character } = this.state;
-    const charactersCards = characters.map((a) => this.renderCards(a));
+    //const charactersCards = characters.map((a) => this.renderCards(a));
     return (
       <div className="App">
         <div className="App-container">
           <h1>Rick And Morty</h1>
-          <div className="Cards-container">{charactersCards}</div>
+          <div className="Cards-container">
+            {characters.map((obj) => (
+              <CharacterCard
+                key={obj.id}
+                character={obj}
+                modalActivate={this.modalActivate.bind(this)}
+              />
+            ))}
+          </div>
           {showModal ? (
-            <div className="modal" onClick={(e) => this.modalInactivate()}>
-              <div className="modal-details">
-                <div className="Card-image">
-                  <figure>
-                    <img src={character.image} alt={character.name} />
-                  </figure>
-                </div>
-                <div className="Card-details-description">
-                  <div className="description">
-                    <h3>Name: {character.name}</h3>
-                    <div className="feature">
-                      <p>Status:</p>
-                      <div className="feature-value">{character.status}</div>
-                    </div>
-                    <div className="feature">
-                      <p>Gender:</p>
-                      <div className="feature-value">{character.gender}</div>
-                    </div>
-                    <div className="feature">
-                      <p>Specie:</p>
-                      <div className="feature-value">{character.species}</div>
-                    </div>
-                    <div className="feature">
-                      <p>Origin:</p>
-                      <div className="feature-value">
-                        {character.origin.name}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <CharacterModal
+              character={character}
+              modalInactivate={this.modalInactivate.bind(this)}
+            />
           ) : null}
         </div>
       </div>
